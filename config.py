@@ -1,3 +1,7 @@
+"""
+This module contains the configuration settings for the Diambra 2.2 project.
+"""
+
 from mscrnt_utils import RunIDGenerator, generate_parameters_report
 import os
 from custom_wrapper import custom_wrapper
