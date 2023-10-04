@@ -5,7 +5,7 @@ from custom_wrapper import custom_wrapper
 
 # Environment Settings
 env_settings = {
-    'env_num': 32,
+    'env_num': 1,
     'check_freq': 320000,
     'time_steps': 32000000
 }
