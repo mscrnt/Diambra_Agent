@@ -25,7 +25,6 @@ def main():
 
     # Create environment
     env, num_envs = make_sb3_env(settings.game_id, settings, wrappers_settings)
-    #print("Activated {} environment(s)".format(num_envs))
 
     checkpoint_files = glob.glob(os.path.join(model_path, "*.zip"))
     if checkpoint_files:
