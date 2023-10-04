@@ -1,5 +1,3 @@
-GitHub Copilot: Certainly! Let's go through each file and its purpose in detail:
-
 ## training.py
 
 `training.py` is the main script for training a reinforcement learning agent for a video game using the Stable Baselines3 library. The script imports various modules and classes from the Stable Baselines3 library, as well as some custom modules and classes defined in this repository. 
