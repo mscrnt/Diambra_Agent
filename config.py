@@ -9,9 +9,9 @@ from custom_wrapper import custom_wrapper
 
 # Environment Settings
 env_settings = {
-    'env_num': 32,
-    'check_freq': 320000,
-    'time_steps': 32000000
+    'env_num': 16,
+    'check_freq': 160000,
+    'time_steps': 16000000
 }
 
 # Derived Settings
@@ -25,7 +25,7 @@ settings = {
     'characters': "Ayane",
     'outfits': 4,
     'action_space': "multi_discrete",
-    'step_ratio': 3,
+    'step_ratio': 4,
     'frame_shape': (128, 128, 1)
 }
 
@@ -37,7 +37,7 @@ wrappers_settings = {
     'no_attack_buttons_combinations': False,
     'normalize_reward': False,
     'normalization_factor': 0.3,
-    'stack_actions': 3,
+    'stack_actions': 4,
     'scale': False,
     'exclude_image_scaling': False,
     'flatten': True,

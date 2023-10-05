@@ -4,8 +4,7 @@ import os
 class RunIDGenerator:
     @classmethod
     def create(cls, settings, wrappers_settings, ppo_settings):
-        run_id = f"-{'S' if ppo_settings['seed'] else 'NS'}_{ppo_settings['seed']}"
-        run_id += f"-SR_{settings['step_ratio']}-SA_{wrappers_settings['stack_actions']}"
+        run_id = f"SR_{settings['step_ratio']}-SA_{wrappers_settings['stack_actions']}"
         if wrappers_settings['normalize_reward']:
             run_id += f"-NF_{wrappers_settings['normalization_factor']:.1e}"
         
