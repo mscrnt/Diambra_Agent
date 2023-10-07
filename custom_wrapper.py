@@ -1,22 +1,5 @@
 import gym
-
-AYANE_COMBOS = [
-    [2, 2, 2, 3],  # Renjin-Soryu-Sen
-    [2, 2, 2, 1],  # Haijin
-    [2, 2, 5, 2, 2],  # Renjin-Koeiso
-    [2, 2, 5, 2, 3],  # Renjin-Yoen
-    [2, 2, 3, 3, 3],  # Renjin-Ten-Ryugaku
-    [2, 2, 3, 3, 7, 3],  # Renjin-Gurenbu
-    [2, 2, 5, 3, 3],  # Renjin-Ryuso
-    [2, 2, 5, 3, 7, 3],  # Renjin-Roso
-    [2, 1, 2],  # Hasetsu
-    [2, 3, 3],  # Hajin-Shinso
-    [1, 2, 3],  # Rasen-Urajin
-    [1, 2, 7, 3],  # Rasen-Urachi
-    [7, 5, 2, 2],  # Fuzan-Ryubu
-    [7, 5, 2, 3]  # Fuzan-Seppu
-]
-
+from combos import ayane
 
 class custom_wrapper(gym.Wrapper):
     def __init__(self, env):
@@ -25,32 +8,34 @@ class custom_wrapper(gym.Wrapper):
         self.previous_stage = None
         self.previous_own_wins = None
         self.special_moves = AYANE_COMBOS  
-        self.sliding_window = []
+        self.previous_opp_health = None
+        self.special_moves = ayane
 
     def step(self, action):
         obs, reward, done, info, *_ = self.env.step(action)
 
-        current_move = obs["action"]
+        current_actions = obs["action"]
+
+        # Translate current_actions into tuples
+        translated_actions = list(zip(current_actions[::2], current_actions[1::2]))
 
         # Initialize special_move_bonus
         special_move_bonus = 0
 
-        for element in current_move:
-            self.sliding_window.append(element)
-            
-            if len(self.sliding_window) > 6:  # Maintain window size of 6
-                self.sliding_window.pop(0)
+        # Check each window of up to 7 actions for special moves
+        for window_size in range(1, 8):  # window sizes from 1 to 7
+            for start_idx in range(len(translated_actions) - window_size + 1):  # sliding the window
+                window = translated_actions[start_idx:start_idx + window_size]
+                for special_move, sequences in self.special_moves.items():
+                    if any(all(move == segment for move, segment in zip(sequence, window)) for sequence in sequences):
+                        # Check if opponent's health has decreased
+                        if self.previous_opp_health is not None and obs['opp_health'][0] < self.previous_opp_health:
+                            special_move_bonus = 1
+                            print(f"Special move {special_move} hit detected!")
+                        break
 
-            if len(self.sliding_window) >= 3:  
-                for special_move in self.special_moves:
-                    if len(special_move) > len(self.sliding_window):
-                        continue
-                    
-                    # Compare against the last len(special_move) elements in sliding_window
-                    last_moves = self.sliding_window[-len(special_move):]
-                    if all(move == segment for move, segment in zip(special_move, last_moves)):
-                        special_move_bonus = .0025
-                        break  
+        # Update previous opponent health
+        self.previous_opp_health = obs['opp_health'][0]
 
         # Add the bonuses to the reward
         reward += special_move_bonus
@@ -84,6 +69,7 @@ class custom_wrapper(gym.Wrapper):
         obs = self.env.reset()
         self.previous_time = None  # Reset previous_time
         self.previous_stage = None  # Reset previous_stage
+        self.previous_opp_health = None 
         return obs
 
 
