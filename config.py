@@ -25,7 +25,7 @@ settings = {
     'characters': "Ayane",
     'outfits': 4,
     'action_space': "multi_discrete",
-    'step_ratio': 4,
+    'step_ratio': 2,
     'frame_shape': (128, 128, 1)
 }
 
@@ -37,7 +37,7 @@ wrappers_settings = {
     'no_attack_buttons_combinations': False,
     'normalize_reward': False,
     'normalization_factor': 0.3,
-    'stack_actions': 4,
+    'stack_actions': 8,
     'scale': False,
     'exclude_image_scaling': False,
     'flatten': True,
