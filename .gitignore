@@ -6,3 +6,22 @@
 /win_venv
 /config.py
 config.py
+roms/doapp.zip
+roms/sfiii3n.zip
+roms/umk3.zip
+DIAMBRA/episode_recording/doapp/2024-03-17_23-31-30-diff1 - Copy.zip
+DIAMBRA/episode_recording/doapp/2024-03-17_23-31-30-diff1.diambra
+DIAMBRA/episode_recording/doapp/2024-03-17_23-41-49.diambra
+DIAMBRA/episode_recording/doapp/2024-03-17_23-45-02.diambra
+imitation/DIAMBRA/episode_recording/doapp/2024-03-17_23-31-30-diff1.diambra
+imitation/DIAMBRA/episode_recording/doapp/2024-03-17_23-41-49.diambra
+imitation/DIAMBRA/episode_recording/doapp/2024-03-17_23-45-02.diambra
+
+# ignore all .pyc files
+*.pyc
+
+# ignore all .diambra files
+*.diambra
+
+# ignore all .zip files
+*.zip
