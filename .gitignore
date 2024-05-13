@@ -37,3 +37,7 @@ imitation/DIAMBRA/episode_recording/doapp/2024-03-17_23-45-02.diambra
 *.bmp
 *.tif
 *.tiff
+test.py
+docker_logs.sh
+docker_logs.py
+/wvenv
