@@ -1,0 +1,8 @@
+defaults:
+  # Inherit evironment configurations from custom_env.yaml
+  - custom_env
+  - _self_
+
+# Override parameters
+sync_env: False # True if you want to use the gymnasium.vector.SyncVectorEnv
+num_envs: 4

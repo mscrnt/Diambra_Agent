@@ -1,3 +1,5 @@
+# training.py
+
 import os
 import glob
 import config 
@@ -6,9 +8,24 @@ from diambra.arena.stable_baselines3.make_sb3_env import make_sb3_env, Environme
 from diambra.arena.stable_baselines3.sb3_utils import linear_schedule, AutoSave
 from stable_baselines3 import PPO
 import torch
+from monitor import DockerMonitor
+import time
+import argparse
 
+def parse_args():
+    parser = argparse.ArgumentParser(description="Training with monitoring.")
+    parser.add_argument('-m', '--min_stage', type=int, default=0,
+                        help='Minimum stage level to start monitoring (default: 0/off)')
+    return parser.parse_args()
 
 def main():
+    args = parse_args()
+    docker_monitor = None
+
+    if args.min_stage > 0:
+        print(f"Monitoring starting at stage {args.min_stage}...")
+        docker_monitor = DockerMonitor(min_stage=args.min_stage)
+
     # Convert action_space from string to SpaceTypes enum
     config.settings["action_space"] = SpaceTypes.DISCRETE if config.settings["action_space"].lower() == "discrete" else SpaceTypes.MULTI_DISCRETE
 
@@ -30,10 +47,22 @@ def main():
     if checkpoint_files:
         latest_checkpoint = max(checkpoint_files, key=os.path.getmtime)
         print(f"Loading latest checkpoint: {latest_checkpoint}")
+        '''
+        Round 1
+        'learning_rate': [2.5e-4, 2.5e-6], 
+        'clip_range': [0.15, 0.025],
+        Round 2
+        'learning_rate': [5.0e-5, 2.5e-6]
+        'clip_range': [0.075, 0.025]     
+        Round 3
+        'learning_rate': [1.0e-5, 2.5e-6],
+        'clip_range': [0.05, 0.01],
+        '''
         agent = PPO.load(latest_checkpoint, env,
-                         learning_rate=linear_schedule(2.28e-4, 2.5e-6),
-                         clip_range=linear_schedule(0.1388, 0.025),
-                         ) 
+                         learning_rate=linear_schedule(5.0e-5, 2.5e-6),
+                         clip_range=linear_schedule(0.15, 0.025),
+                         device="cuda" if torch.cuda.is_available() else "cpu")
+                         
     else:
         print("No checkpoint file found. Training a new model.")
         agent = PPO("MultiInputPolicy", env, verbose=1,
@@ -46,10 +75,6 @@ def main():
                     seed=hparams['seed'],
                     device="cuda" if torch.cuda.is_available() else "cpu")
 
-    # Print policy network architecture
-    #print("Policy architecture:")
-    #print(agent.policy)
-
     # Create the callback: autosave every USER DEF steps
     autosave_freq = config.env_settings["check_freq"]
     auto_save_callback = AutoSave(check_freq=autosave_freq, num_envs=num_envs, save_path=model_path)
@@ -57,18 +82,23 @@ def main():
     # Train the agent
 
     time_steps = config.env_settings["time_steps"]
+
+    if docker_monitor:
+        docker_monitor.start_monitoring()
+
     print(f"Training for {time_steps} time steps...")
-    agent.learn(total_timesteps=time_steps, callback=auto_save_callback)
-
-    print("Training finished!")
-    # Save the agent
-    agent.save(model_path)
-
-    print("Model saved!")
-
-    # Close the environment
-    env.close()
-
+    try:
+        agent.learn(total_timesteps=time_steps, callback=auto_save_callback)
+    except KeyboardInterrupt:
+        print("Interrupted by user, stopping training...")
+    finally:
+        print("Training finished or stopped early!")
+        agent.save(model_path)
+        print("Model saved!")
+        if docker_monitor:
+            docker_monitor.stop_monitoring()
+        env.close()
+        
     # Return success
     return 0
 

@@ -1,0 +1,9 @@
+mode: AIvsCOM
+image: diambra/arena-stable-baselines3-on3.10-bullseye:main
+version: v2.2
+command:
+  - python
+  - "/sources/agent.py"
+  - "/sources/model.zip"
+sources:
+  .: git+https://mscrnt:{{.Secrets.token}}@git.mscrnt.com/mscrnt/DIAMBRA_Agent.git#ref=main

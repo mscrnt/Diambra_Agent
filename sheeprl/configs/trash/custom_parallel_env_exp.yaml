@@ -1,0 +1,8 @@
+# @package _global_
+
+defaults:
+  # Inherit configs from custom_exp
+  - custom_exp
+  # Override the environment configurations
+  - override /env: custom_parallel_env
+  - _self_
