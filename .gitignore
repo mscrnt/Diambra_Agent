@@ -41,3 +41,5 @@ test.py
 docker_logs.sh
 docker_logs.py
 /wvenv
+submission/secret_gh_token
+sheeprl/logs/*
