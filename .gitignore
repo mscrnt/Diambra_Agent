@@ -25,3 +25,15 @@ imitation/DIAMBRA/episode_recording/doapp/2024-03-17_23-45-02.diambra
 
 # ignore all .zip files
 *.zip
+
+*.log
+*.csv
+*.json
+*.h5
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.bmp
+*.tif
+*.tiff
