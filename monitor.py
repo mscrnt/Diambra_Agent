@@ -24,7 +24,7 @@ def setup_logging():
     logger.setLevel(logging.DEBUG)
 
     file_formatter = logging.Formatter('%(levelname)s - %(message)s')
-    file_handler = RotatingFileHandler('docker_logs/docker_monitor.log', maxBytes=1024*1024*20, backupCount=5)
+    file_handler = RotatingFileHandler('docker_logs/docker_monitor.log', maxBytes=1024*1024*10, backupCount=5)
     file_handler.setFormatter(file_formatter)
     file_handler.setLevel(logging.DEBUG)
 
