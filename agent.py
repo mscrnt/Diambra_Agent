@@ -4,9 +4,11 @@ from diambra.arena import SpaceTypes
 from diambra.arena.stable_baselines3.make_sb3_env import make_sb3_env, EnvironmentSettings, WrappersSettings
 from stable_baselines3 import PPO
 import diambra
+from logging.handlers import RotatingFileHandler
+
 
 # Create handlers
-file_handler = logging.FileHandler('evaluation.log')
+file_handler = RotatingFileHandler('docker_logs/docker_monitor.log', maxBytes=1024*1024*5, backupCount=5)
 file_handler.setLevel(logging.DEBUG)  # Log DEBUG and higher levels to the file
 file_handler.setFormatter(logging.Formatter('%(asctime)s %(levelname)s:%(message)s'))
 
@@ -54,7 +56,7 @@ def main():
     ]
     env = diambra.arena.make("mvsc", settings, wrappers_settings, render_mode="human")
 
-    checkpoint = "models/mvsc/('Spider Man', 'Ryu')/SR1-SA8/PPO1/autosave_1500000.zip"
+    checkpoint = "models/mvsc/('Spider Man', 'Ryu')/SR1-SA8/autosave_12400000.zip"
 
     agent = PPO.load(checkpoint, env, device="cpu")
     logger.info("Agent loaded successfully!")
