@@ -9,7 +9,6 @@ from diambra.arena.stable_baselines3.sb3_utils import linear_schedule, AutoSave
 from stable_baselines3 import PPO
 import torch
 from monitor import DockerMonitor
-import time
 import argparse
 
 def parse_args():
@@ -59,8 +58,8 @@ def main():
         'clip_range': [0.05, 0.01],
         '''
         agent = PPO.load(latest_checkpoint, env,
-                         learning_rate=linear_schedule(5.0e-5, 2.5e-6),
-                         clip_range=linear_schedule(0.15, 0.025),
+                         learning_rate=linear_schedule(1.0e-5, 2.5e-6),
+                         clip_range=linear_schedule(0.05, 0.01),
                          device="cuda" if torch.cuda.is_available() else "cpu")
                          
     else:
