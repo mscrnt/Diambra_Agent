@@ -39,8 +39,10 @@ def setup_logging():
 class ColorFormatter(logging.Formatter):
     """Custom formatter to add color to console output based on log level."""
     def format(self, record):
-        if 'reached stage' in record.msg or 'Game completed' in record.msg:
+        if 'reached stage' in record.msg:
             color = Fore.WHITE
+        elif 'Game completed' in record.msg:
+            color = Fore.YELLOW
         else:
             levelno = record.levelno
             color = Fore.GREEN if levelno == 20 else Fore.RED if levelno >= 40 else Fore.CYAN
