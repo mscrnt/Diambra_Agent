@@ -1,6 +1,7 @@
 import multiprocessing
 import subprocess
 import os
+import time
 
 def run_optuna_script(process_id):
     log_dir = "optuna_logs"
@@ -17,6 +18,7 @@ if __name__ == "__main__":
         p = multiprocessing.Process(target=run_optuna_script, args=(i,))
         p.start()
         processes.append(p)
+        time.sleep(5)  # Stagger the start of each process by 5 seconds
 
     for p in processes:
         p.join()
