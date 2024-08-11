@@ -46,3 +46,4 @@ sheeprl/logs/*
 imitation/logs/*
 optuna/tensorboard_logs/*
 optuna/optuna_logs/*
+optuna/tests/*
