@@ -64,7 +64,7 @@ ppo_settings = {
 }
 
 # Optuna Hyperparameter Optimization
-N_TRIALS = 1000
+N_TRIALS = 1024
 N_STARTUP_TRIALS = int(0.2 * N_TRIALS)
 N_TIMESTEPS = env_settings['time_steps']
 EVAL_FREQ = env_settings['check_freq']
@@ -96,7 +96,7 @@ class AdvancedPruner(PercentilePruner):
             return True
 
         # Skip custom pruning logic if the trial has not completed 100 more trials than the n_startup_trials
-        custom_startup_trials = self._n_startup_trials + 100
+        custom_startup_trials = self._n_startup_trials + 200
         if len(completed_trials) < custom_startup_trials:
             logger.info(f"Skipping custom pruning logic for Trial {trial.number} because fewer than {custom_startup_trials} trials have completed.")
             return False
@@ -385,12 +385,12 @@ if __name__ == "__main__":
 
     sampler = TPESampler(n_startup_trials=N_STARTUP_TRIALS)
     pruner = AdvancedPruner(
-        percentile=50.0,  # Set this according to your needs
+        percentile=50.0,  
         n_startup_trials=N_STARTUP_TRIALS,
         n_warmup_steps=0,
         interval_steps=1,
         n_min_trials=1,
-        deviation_threshold=0.05  # Allowable deviation from the average
+        deviation_threshold=0.25  # Allowable deviation from the average
     )
 
     study = None
